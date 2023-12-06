@@ -22,10 +22,10 @@ public class UsuarioService {
     }
 
     public List<UsuarioResponseDTO> buscarTodosUsuarios() {
-        List<Usuario> usuarios =  usuarioRepository.findAll();
+        List<Usuario> usuarios = usuarioRepository.findAll();
         List<UsuarioResponseDTO> usuariosResponse = new ArrayList<>();
 
-        for (Usuario u: usuarios) {
+        for (Usuario u : usuarios) {
             usuariosResponse.add(UsuarioConverter.converterEntidadeParaDTO(u));
         }
 
@@ -36,10 +36,22 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email);
     }
 
+    private Usuario buscarUsuarioPorCPF(String cpf) {
+        return usuarioRepository.findByCpf(cpf);
+    }
+
     public void cadastrarUsuario(UsuarioRequestDTO usuarioRequestDTO) {
         String verificarEmailUsuarioASerAdicionado = usuarioRequestDTO.getEmail();
-        Usuario usuarioExistente = buscarUsuarioPorEmail(verificarEmailUsuarioASerAdicionado);
-        if (usuarioExistente != null) {
+        String verificarCPFUsuarioASerAdicionado = usuarioRequestDTO.getCpf();
+        Usuario EmailusuarioExistente = buscarUsuarioPorEmail(verificarEmailUsuarioASerAdicionado);
+        Usuario CpfDoUsuarioExistente = buscarUsuarioPorCPF(verificarCPFUsuarioASerAdicionado);
+        if (CpfDoUsuarioExistente != null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não foi possivel cadastrar usuario, cpf: " + verificarCPFUsuarioASerAdicionado + " já cadastrado"
+
+            );
+        } else if (EmailusuarioExistente != null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Não foi possivel cadastrar usuario, email: " + verificarEmailUsuarioASerAdicionado + " já cadastrado"

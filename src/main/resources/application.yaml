@@ -18,3 +18,5 @@ spring:
   h2:
     console:
       enabled: true
+
+weather-external-api: https://api.weatherapi.com/v1/current.json?key=7b8fa6a32fab4e5aba7230804231605&q=porto_Alegre

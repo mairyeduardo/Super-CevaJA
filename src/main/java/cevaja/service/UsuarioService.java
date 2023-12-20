@@ -62,4 +62,17 @@ public class UsuarioService {
         }
     }
 
+    public Usuario removerPorEmail(String email) {
+        Usuario usuarioASerRemovido = usuarioRepository.findByEmail(email);
+        if (usuarioASerRemovido == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel remover um usuario inexistente." +
+                            " O Usuario de email: " + email + " não existe na base da dados.");
+        } else {
+            usuarioRepository.delete(usuarioASerRemovido);
+            return usuarioASerRemovido;
+        }
+    }
+
 }

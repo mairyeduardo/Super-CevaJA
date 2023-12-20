@@ -30,4 +30,11 @@ public class UsuarioController {
         usuarioService.cadastrarUsuario(usuarioRequestDTO);
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/remover/{email}")
+    public ResponseEntity<Usuario> removerUsuarioPorEmail(@PathVariable("email") String email) {
+        Usuario usuarioRemovido = usuarioService.removerPorEmail(email);
+        return ResponseEntity.ok(usuarioRemovido);
+    }
+
 }

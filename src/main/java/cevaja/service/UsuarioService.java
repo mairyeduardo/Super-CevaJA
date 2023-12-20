@@ -62,17 +62,39 @@ public class UsuarioService {
         }
     }
 
-    public Usuario removerPorEmail(String email) {
+    public UsuarioResponseDTO removerPorEmail(String email) {
+
         Usuario usuarioASerRemovido = usuarioRepository.findByEmail(email);
+
         if (usuarioASerRemovido == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Não é possivel remover um usuario inexistente." +
                             " O Usuario de email: " + email + " não existe na base da dados.");
         } else {
+            UsuarioResponseDTO usuarioDto = UsuarioConverter.converterEntidadeParaDTO(usuarioASerRemovido);
             usuarioRepository.delete(usuarioASerRemovido);
-            return usuarioASerRemovido;
+            return usuarioDto;
         }
     }
+
+    public UsuarioResponseDTO alterarNomeEOuSobrenomePorId(Long id, UsuarioRequestDTO usuarioRequestDTO) {
+        Usuario usuarioEncontrado = usuarioRepository.findById(id).get();
+
+        String nomeUsuarioDTO = usuarioRequestDTO.getNome();
+        if (nomeUsuarioDTO != null) {
+            usuarioEncontrado.setNome(nomeUsuarioDTO);
+        }
+
+        String sobrenomeUsuarioDTO = usuarioRequestDTO.getSobrenome();
+        if (sobrenomeUsuarioDTO != null) {
+            usuarioEncontrado.setSobrenome(sobrenomeUsuarioDTO);
+        }
+
+        usuarioRepository.save(usuarioEncontrado);
+        UsuarioResponseDTO usuarioDTO = UsuarioConverter.converterEntidadeParaDTO(usuarioEncontrado);
+        return usuarioDTO;
+    }
+
 
 }

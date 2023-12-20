@@ -22,6 +22,7 @@ public class UsuarioConverter {
 
     public static UsuarioResponseDTO converterEntidadeParaDTO(Usuario usuario) {
         UsuarioResponseDTO usuarioResponseDTO = new UsuarioResponseDTO();
+        usuarioResponseDTO.setId(usuario.getId());
         usuarioResponseDTO.setNome(usuario.getNome());
         usuarioResponseDTO.setSobrenome(usuario.getSobrenome());
         usuarioResponseDTO.setDataNascimento(usuario.getDataNascimento());

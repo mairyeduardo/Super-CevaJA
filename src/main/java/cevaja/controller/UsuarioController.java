@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.List;
 
 @RestController
@@ -32,9 +33,16 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/remover/{email}")
-    public ResponseEntity<Usuario> removerUsuarioPorEmail(@PathVariable("email") String email) {
-        Usuario usuarioRemovido = usuarioService.removerPorEmail(email);
+    public ResponseEntity<UsuarioResponseDTO> removerUsuarioPorEmail(@PathVariable("email") String email) {
+        UsuarioResponseDTO usuarioRemovido = usuarioService.removerPorEmail(email);
         return ResponseEntity.ok(usuarioRemovido);
+    }
+
+    @PutMapping("/alterar/{id}")
+    public ResponseEntity<UsuarioResponseDTO> alterarNomeEOuSobrenomeDoUsuarioPassandoID(@PathVariable("id") Long id,
+                                                                                         @RequestBody UsuarioRequestDTO usuario) {
+        UsuarioResponseDTO usuarioAlterado = usuarioService.alterarNomeEOuSobrenomePorId(id, usuario);
+        return ResponseEntity.ok(usuarioAlterado);
     }
 
 }

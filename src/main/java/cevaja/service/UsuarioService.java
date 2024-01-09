@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -59,6 +60,46 @@ public class UsuarioService {
         } else {
             Usuario usuarioEntity = UsuarioConverter.converterDTOParaEntidade(usuarioRequestDTO);
             usuarioRepository.save(usuarioEntity);
+        }
+    }
+
+    public UsuarioResponseDTO removerPorEmail(String email) {
+
+        Usuario usuarioASerRemovido = usuarioRepository.findByEmail(email);
+
+        if (usuarioASerRemovido == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel remover um usuario inexistente." +
+                            " O Usuario de email: " + email + " não existe na base da dados.");
+        } else {
+            UsuarioResponseDTO usuarioDto = UsuarioConverter.converterEntidadeParaDTO(usuarioASerRemovido);
+            usuarioRepository.delete(usuarioASerRemovido);
+            return usuarioDto;
+        }
+    }
+
+    public UsuarioResponseDTO alterarNomeEOuSobrenomePorId(Long id, UsuarioRequestDTO usuarioRequestDTO) {
+        Optional<Usuario> usuarioOptionalEncontrado = usuarioRepository.findById(id);
+        if (usuarioOptionalEncontrado.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel alterar dados de um usuario inexistente.");
+        } else {
+            Usuario usuarioEncontrado = usuarioOptionalEncontrado.get();
+            String nomeUsuarioDTO = usuarioRequestDTO.getNome();
+            if (nomeUsuarioDTO != null) {
+                usuarioEncontrado.setNome(nomeUsuarioDTO);
+            }
+
+            String sobrenomeUsuarioDTO = usuarioRequestDTO.getSobrenome();
+            if (sobrenomeUsuarioDTO != null) {
+                usuarioEncontrado.setSobrenome(sobrenomeUsuarioDTO);
+            }
+
+            usuarioRepository.save(usuarioEncontrado);
+            UsuarioResponseDTO usuarioDTO = UsuarioConverter.converterEntidadeParaDTO(usuarioEncontrado);
+            return usuarioDTO;
         }
     }
 

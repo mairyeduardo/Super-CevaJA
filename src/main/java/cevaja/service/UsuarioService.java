@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -79,22 +80,27 @@ public class UsuarioService {
     }
 
     public UsuarioResponseDTO alterarNomeEOuSobrenomePorId(Long id, UsuarioRequestDTO usuarioRequestDTO) {
-        Usuario usuarioEncontrado = usuarioRepository.findById(id).get();
+        Optional<Usuario> usuarioOptionalEncontrado = usuarioRepository.findById(id);
+        if (usuarioOptionalEncontrado.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel alterar dados de um usuario inexistente.");
+        } else {
+            Usuario usuarioEncontrado = usuarioOptionalEncontrado.get();
+            String nomeUsuarioDTO = usuarioRequestDTO.getNome();
+            if (nomeUsuarioDTO != null) {
+                usuarioEncontrado.setNome(nomeUsuarioDTO);
+            }
 
-        String nomeUsuarioDTO = usuarioRequestDTO.getNome();
-        if (nomeUsuarioDTO != null) {
-            usuarioEncontrado.setNome(nomeUsuarioDTO);
+            String sobrenomeUsuarioDTO = usuarioRequestDTO.getSobrenome();
+            if (sobrenomeUsuarioDTO != null) {
+                usuarioEncontrado.setSobrenome(sobrenomeUsuarioDTO);
+            }
+
+            usuarioRepository.save(usuarioEncontrado);
+            UsuarioResponseDTO usuarioDTO = UsuarioConverter.converterEntidadeParaDTO(usuarioEncontrado);
+            return usuarioDTO;
         }
-
-        String sobrenomeUsuarioDTO = usuarioRequestDTO.getSobrenome();
-        if (sobrenomeUsuarioDTO != null) {
-            usuarioEncontrado.setSobrenome(sobrenomeUsuarioDTO);
-        }
-
-        usuarioRepository.save(usuarioEncontrado);
-        UsuarioResponseDTO usuarioDTO = UsuarioConverter.converterEntidadeParaDTO(usuarioEncontrado);
-        return usuarioDTO;
     }
-
 
 }

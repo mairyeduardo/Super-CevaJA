@@ -1,13 +1,11 @@
 package cevaja.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
-
+@Entity
+@Table(name = "Cerveja_Tb")
 @Data
 public class Cerveja {
 

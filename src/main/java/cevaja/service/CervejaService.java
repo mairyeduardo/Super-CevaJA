@@ -48,7 +48,20 @@ public class CervejaService {
         }
     }
 
+    public CervejaResponseDTO removerPorTipo(String tipo) {
 
+        Cerveja cervejaASerRemovida = cervejaRepository.findByTipo(tipo);
+
+        if (cervejaASerRemovida == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel remover, cerveja de tipo: " +tipo+ " não cadastrada no banco de dados.");
+        } else {
+            CervejaResponseDTO cervejaResponseDTO = CervejaConverter.converterEntidadeParaDTO(cervejaASerRemovida);
+            cervejaRepository.delete(cervejaASerRemovida);
+            return cervejaResponseDTO;
+        }
+    }
 
 
 

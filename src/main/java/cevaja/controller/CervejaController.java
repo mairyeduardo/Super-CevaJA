@@ -1,9 +1,7 @@
 package cevaja.controller;
 
-import cevaja.model.Cerveja;
 import cevaja.model.dto.CervejaRequestDTO;
 import cevaja.model.dto.CervejaResponseDTO;
-import cevaja.model.dto.UsuarioRequestDTO;
 import cevaja.service.CervejaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +28,11 @@ public class CervejaController {
     public ResponseEntity<Void> adicionarCerveja(@RequestBody CervejaRequestDTO cervejaRequestDTO) {
         cervejaService.adicionarCerveja(cervejaRequestDTO);
         return new ResponseEntity<>(null, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/remover/{tipo}")
+    public ResponseEntity<CervejaResponseDTO> removerCervejaPorTipo(@PathVariable("tipo") String tipo) {
+        CervejaResponseDTO cervejaRemovida = cervejaService.removerPorTipo(tipo);
+        return ResponseEntity.ok(cervejaRemovida);
     }
 }

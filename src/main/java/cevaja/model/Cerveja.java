@@ -18,5 +18,4 @@ public class Cerveja {
     private BigDecimal valor;
     @Column
     private BigDecimal quantidade;
-
 }

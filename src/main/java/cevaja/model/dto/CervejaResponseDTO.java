@@ -9,5 +9,6 @@ public class CervejaResponseDTO {
     private Long id;
     private String tipo;
     private BigDecimal valor;
+    private BigDecimal quantidade;
 
 }

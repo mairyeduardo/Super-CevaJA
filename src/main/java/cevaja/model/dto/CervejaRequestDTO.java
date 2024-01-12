@@ -9,5 +9,6 @@ public class CervejaRequestDTO {
 
     private String tipo;
     private BigDecimal valor;
+    private BigDecimal quantidade;
 
 }

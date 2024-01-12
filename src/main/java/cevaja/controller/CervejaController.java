@@ -35,4 +35,11 @@ public class CervejaController {
         CervejaResponseDTO cervejaRemovida = cervejaService.removerPorTipo(tipo);
         return ResponseEntity.ok(cervejaRemovida);
     }
+
+    @PutMapping("/alterarValor/{tipo}")
+    public ResponseEntity<CervejaResponseDTO> alterarValorCervejaPassandoTipo(@PathVariable("tipo") String tipo, @RequestBody CervejaRequestDTO cervejaRequestDTO) {
+        CervejaResponseDTO cervejaAserAlterada = cervejaService.alterarPorTipo(tipo, cervejaRequestDTO );
+        return ResponseEntity.ok(cervejaAserAlterada);
+    }
+
 }

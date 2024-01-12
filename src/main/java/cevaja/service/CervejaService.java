@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +64,22 @@ public class CervejaService {
         }
     }
 
+    public CervejaResponseDTO alterarPorTipo (String tipo, CervejaRequestDTO cervejaRequestDTO) {
+      Cerveja CervejaEncontada = cervejaRepository.findByTipo(tipo);
 
+      BigDecimal novoValorCerveja = cervejaRequestDTO.getValor();
+
+        if (CervejaEncontada == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel alterar dados de uma cerveja inexistente.");
+
+        } else {
+            CervejaEncontada.setValor(novoValorCerveja);
+        }
+        cervejaRepository.save(CervejaEncontada);
+        CervejaResponseDTO cervejaDTO = CervejaConverter.converterEntidadeParaDTO(CervejaEncontada);
+        return cervejaDTO;
+    }
 
 }

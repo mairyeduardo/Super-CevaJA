@@ -18,4 +18,7 @@ public class Cerveja {
     private BigDecimal valor;
     @Column
     private BigDecimal quantidade;
+    @ManyToOne
+    @JoinColumn(name = "pedido_id")
+    private Pedido pedido;
 }

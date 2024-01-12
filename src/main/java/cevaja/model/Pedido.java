@@ -20,8 +20,8 @@ public class Pedido {
     @Column
     private Long idUsuario;
     @Column
+    @OneToMany(mappedBy = "pedido")
     private List<Cerveja> cervejaList;
-    @Column
-    private Long quantidade;
+
 
 }

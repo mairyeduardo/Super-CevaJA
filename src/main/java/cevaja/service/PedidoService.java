@@ -5,11 +5,13 @@ import cevaja.integration.service.TemperaturaIntegrationService;
 import cevaja.model.Cerveja;
 import cevaja.model.Pedido;
 import cevaja.model.dto.PedidoRequestDTO;
+import cevaja.model.dto.PedidoResponseDTO;
 import cevaja.model.dto.converter.PedidoConverter;
 import cevaja.repository.PedidoRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +24,16 @@ public class PedidoService {
     public PedidoService(PedidoRepository pedidoRepository, TemperaturaIntegrationService temperaturaIntegrationService) {
         this.pedidoRepository = pedidoRepository;
         this.temperaturaIntegrationService = temperaturaIntegrationService;
+    }
+
+    public List<PedidoResponseDTO> buscarTodosPedidos() {
+        List<Pedido> pedidos = pedidoRepository.findAll();
+        List<PedidoResponseDTO> pedidoResponse = new ArrayList<>();
+
+        for (Pedido p: pedidos) {
+            pedidoResponse.add(PedidoConverter.converterEntidadeParaDTO(p));
+        }
+        return pedidoResponse;
     }
 
     public String efetuarPedido(Long id, PedidoRequestDTO pedidoRequestDTO) {
@@ -40,7 +52,7 @@ public class PedidoService {
         BigDecimal valorTotalCervejas = BigDecimal.valueOf(0);
         BigDecimal somarQuantidades = BigDecimal.valueOf(0);
 
-        for (int i = 0; i <= cervejasPedidas.size(); i++) {
+        for (int i = 0; i < cervejasPedidas.size(); i++) {
             BigDecimal quantidade = cervejasPedidas.get(i).getQuantidade();
             somarQuantidades.add(somarQuantidades.add(quantidade));
             BigDecimal valor = cervejasPedidas.get(i).getValor();

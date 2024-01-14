@@ -10,6 +10,7 @@ public class CervejaConverter {
         Cerveja cervejaRequestEntity = new Cerveja();
         cervejaRequestEntity.setTipo(cervejaRequestDTO.getTipo());
         cervejaRequestEntity.setValor(cervejaRequestDTO.getValor());
+        cervejaRequestEntity.setQuantidade(cervejaRequestDTO.getQuantidade());
 
         return cervejaRequestEntity;
     }
@@ -19,7 +20,7 @@ public class CervejaConverter {
         cervejaResponseDTO.setId(cerveja.getId());
         cervejaResponseDTO.setTipo(cerveja.getTipo());
         cervejaResponseDTO.setValor(cerveja.getValor());
-
+        cervejaResponseDTO.setQuantidade(cerveja.getQuantidade());
         return cervejaResponseDTO;
     }
 }

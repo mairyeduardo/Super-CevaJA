@@ -25,4 +25,16 @@ public class Usuario {
     private String email;
     @Column
     private String senha;
+
+    public int calcularIdade() {
+        LocalDate dataAtual = LocalDate.now();
+        return dataAtual.getYear() - dataNascimento.getYear();
+    }
+
+    public boolean podeComprarBebida() {
+        // Verifica se o usuário tem pelo menos 18 anos
+        return calcularIdade() >= 18;
+    }
+
+
 }

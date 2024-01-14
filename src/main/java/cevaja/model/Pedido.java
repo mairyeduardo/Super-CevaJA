@@ -16,8 +16,12 @@ public class Pedido {
     @ManyToOne
     @JoinColumn(name = "id_usuario", referencedColumnName = "id")
     private Usuario usuario;
-    @Column
-    @OneToMany(mappedBy = "pedido")
+    @ManyToMany
+    @JoinTable(
+            name = "pedido_cerveja",
+            joinColumns = @JoinColumn(name = "pedido_id"),
+            inverseJoinColumns = @JoinColumn(name = "cerveja_id")
+    )
     private List<Cerveja> cerveja;
 
 }

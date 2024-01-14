@@ -9,7 +9,6 @@ import java.util.List;
 @Data
 public class PedidoRequestDTO {
 
-    private String nome;
-    private String email;
-    private List<Cerveja> cervejas;
+    private Long idUsuario;
+    private List<Cerveja> cerveja;
 }

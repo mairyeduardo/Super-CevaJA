@@ -12,5 +12,5 @@ public class PedidoResponseDTO {
     private String nome;
     private String email;
     private Long idUsuario;
-    private List<Cerveja> cervejas;
+    private List<Cerveja> cerveja;
 }

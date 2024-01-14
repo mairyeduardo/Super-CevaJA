@@ -20,10 +20,12 @@ public class PedidoService {
     static final BigDecimal valorDescontoGraus = BigDecimal.valueOf(15);
     private PedidoRepository pedidoRepository;
     private TemperaturaIntegrationService temperaturaIntegrationService;
+    private UsuarioService usuarioService;
 
-    public PedidoService(PedidoRepository pedidoRepository, TemperaturaIntegrationService temperaturaIntegrationService) {
+    public PedidoService(PedidoRepository pedidoRepository, TemperaturaIntegrationService temperaturaIntegrationService, UsuarioService usuarioService) {
         this.pedidoRepository = pedidoRepository;
         this.temperaturaIntegrationService = temperaturaIntegrationService;
+        this.usuarioService = usuarioService;
     }
 
     public List<PedidoResponseDTO> buscarTodosPedidos() {
@@ -36,9 +38,11 @@ public class PedidoService {
         return pedidoResponse;
     }
 
-    public String efetuarPedido(Long id, PedidoRequestDTO pedidoRequestDTO) {
+    public String efetuarPedido(PedidoRequestDTO pedidoRequestDTO) {
 
-        Pedido pedido = PedidoConverter.converterDTOParaEntidade(pedidoRequestDTO);
+        var usuario = usuarioService.buscarPorId(pedidoRequestDTO.getIdUsuario());
+
+        Pedido pedido = PedidoConverter.converterDTOParaEntidade(pedidoRequestDTO, usuario);
         pedidoRepository.save(pedido);
 
         String message = "Valor total do pedido = " + calculoDoValorTotalDoPedido(pedidoRequestDTO);
@@ -48,7 +52,7 @@ public class PedidoService {
 
     public BigDecimal calculoDoValorTotalDoPedido(PedidoRequestDTO pedidoRequestDTO) {
 
-        List<Cerveja> cervejasPedidas = pedidoRequestDTO.getCervejas();
+        List<Cerveja> cervejasPedidas = pedidoRequestDTO.getCerveja();
         BigDecimal valorTotalCervejas = BigDecimal.valueOf(0);
         BigDecimal somarQuantidades = BigDecimal.valueOf(0);
 

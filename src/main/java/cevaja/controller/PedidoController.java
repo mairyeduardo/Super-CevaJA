@@ -19,9 +19,9 @@ public class PedidoController {
         this.pedidoService = pedidoService;
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<String> fazerPedido(@PathVariable("id") Long id, @RequestBody PedidoRequestDTO pedidoRequestDTO) {
-        pedidoService.efetuarPedido(id, pedidoRequestDTO);
+    @PostMapping
+    public ResponseEntity<String> fazerPedido(@RequestBody PedidoRequestDTO pedidoRequestDTO) {
+        pedidoService.efetuarPedido(pedidoRequestDTO);
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 

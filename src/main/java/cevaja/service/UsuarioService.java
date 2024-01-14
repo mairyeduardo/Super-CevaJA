@@ -33,6 +33,14 @@ public class UsuarioService {
         return usuariosResponse;
     }
 
+    public Usuario buscarPorId(Long id) {
+        var user = usuarioRepository.findById(id);
+        if (user.isPresent()) {
+            return user.get();
+        }
+        return null;
+    }
+
     private Usuario buscarUsuarioPorEmail(String email) {
         return usuarioRepository.findByEmail(email);
     }

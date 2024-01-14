@@ -13,15 +13,11 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column
-    private String nome;
-    @Column
-    private String email;
-    @Column
-    private Long idUsuario;
+    @ManyToOne
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id")
+    private Usuario usuario;
     @Column
     @OneToMany(mappedBy = "pedido")
-    private List<Cerveja> cervejaList;
-
+    private List<Cerveja> cerveja;
 
 }

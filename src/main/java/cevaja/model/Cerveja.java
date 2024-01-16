@@ -21,6 +21,4 @@ public class Cerveja {
     @Column
     private BigDecimal quantidade;
 
-    @ManyToMany(mappedBy = "cerveja")
-    private List<Pedido> pedidos;
 }

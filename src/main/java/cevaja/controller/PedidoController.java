@@ -20,9 +20,9 @@ public class PedidoController {
     }
 
     @PostMapping
-    public ResponseEntity<String> fazerPedido(@RequestBody PedidoRequestDTO pedidoRequestDTO) {
+    public ResponseEntity<PedidoResponseDTO> fazerPedido(@RequestBody PedidoRequestDTO pedidoRequestDTO) {
         pedidoService.efetuarPedido(pedidoRequestDTO);
-        return new ResponseEntity<>(null, HttpStatus.CREATED);
+        return ResponseEntity.ok(pedidoService.efetuarPedido(pedidoRequestDTO));
     }
 
     @GetMapping("/listarpedidos")

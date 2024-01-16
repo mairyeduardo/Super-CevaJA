@@ -21,16 +21,17 @@ import java.util.Objects;
 
 @Service
 public class PedidoService {
-    static final BigDecimal valorDescontoQNTItens = BigDecimal.valueOf(10);
-    static final BigDecimal valorDescontoGraus = BigDecimal.valueOf(15);
+
     private PedidoRepository pedidoRepository;
     private TemperaturaIntegrationService temperaturaIntegrationService;
     private UsuarioService usuarioService;
+    private PedidoConverter pedidoConverter;
 
-    public PedidoService(PedidoRepository pedidoRepository, TemperaturaIntegrationService temperaturaIntegrationService, UsuarioService usuarioService) {
+    public PedidoService(PedidoRepository pedidoRepository, TemperaturaIntegrationService temperaturaIntegrationService, UsuarioService usuarioService,PedidoConverter pedidoConverter) {
         this.pedidoRepository = pedidoRepository;
         this.temperaturaIntegrationService = temperaturaIntegrationService;
         this.usuarioService = usuarioService;
+        this.pedidoConverter = pedidoConverter;
     }
 
     public List<PedidoResponseDTO> buscarTodosPedidos() {
@@ -38,12 +39,12 @@ public class PedidoService {
         List<PedidoResponseDTO> pedidoResponse = new ArrayList<>();
 
         for (Pedido p : pedidos) {
-            pedidoResponse.add(PedidoConverter.converterEntidadeParaDTO(p));
+            pedidoResponse.add(pedidoConverter.converterEntidadeParaDTO(p));
         }
         return pedidoResponse;
     }
 
-    public String efetuarPedido(PedidoRequestDTO pedidoRequestDTO) {
+    public PedidoResponseDTO efetuarPedido(PedidoRequestDTO pedidoRequestDTO) {
 
         var usuario = usuarioService.buscarPorId(pedidoRequestDTO.getIdUsuario());
 
@@ -61,46 +62,11 @@ public class PedidoService {
             );
         }
 
-        Pedido pedido = PedidoConverter.converterDTOParaEntidade(pedidoRequestDTO, usuario);
+        Pedido pedido = pedidoConverter.converterDTOParaEntidade(pedidoRequestDTO, usuario);
+        pedido.calculoDoValorTotalDoPedido(temperaturaIntegrationService.buscarTemperaturaAtual());
         pedidoRepository.save(pedido);
 
-        String message = "Valor total do pedido = " + calculoDoValorTotalDoPedido(pedidoRequestDTO);
-        return message;
-    }
-
-
-    public BigDecimal calculoDoValorTotalDoPedido(PedidoRequestDTO pedidoRequestDTO) {
-
-        List<Cerveja> cervejasPedidas = pedidoRequestDTO.getCerveja();
-        BigDecimal valorTotalCervejas = BigDecimal.valueOf(0);
-        BigDecimal somarQuantidades = BigDecimal.valueOf(0);
-
-        for (int i = 0; i < cervejasPedidas.size(); i++) {
-            BigDecimal quantidade = cervejasPedidas.get(i).getQuantidade();
-            somarQuantidades.add(somarQuantidades.add(quantidade));
-            BigDecimal valor = cervejasPedidas.get(i).getValor();
-            valorTotalCervejas.add(valorTotalCervejas.add(quantidade.multiply(valor)));
-        }
-
-        BigDecimal porcentagemDescontoAtual = BigDecimal.valueOf(0);
-        Integer quantidadeItensParaDesconto = 10;
-
-        if (somarQuantidades.longValue() >= quantidadeItensParaDesconto) {
-            porcentagemDescontoAtual.add(porcentagemDescontoAtual.add(valorDescontoQNTItens));
-        }
-
-        TemperaturaResponse temperaturaAtual = temperaturaIntegrationService.buscarTemperaturaAtual();
-        Integer grausNecessariosParaDesconto = 22;
-
-        if (temperaturaAtual.getCurrent().getTemp_c() <= grausNecessariosParaDesconto) {
-            porcentagemDescontoAtual.add(porcentagemDescontoAtual.add(valorDescontoGraus));
-        }
-
-        BigDecimal valorDoDesconto = valorTotalCervejas.multiply(porcentagemDescontoAtual).divide(BigDecimal.valueOf(100));
-        BigDecimal valorTotalPedidoComDesconto = valorTotalCervejas.subtract(valorDoDesconto);
-
-
-        return valorTotalPedidoComDesconto;
+       return pedidoConverter.converterEntidadeParaDTO(pedido);
     }
 
 }

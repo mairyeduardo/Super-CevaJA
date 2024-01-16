@@ -32,7 +32,6 @@ public class Usuario {
     }
 
     public boolean podeComprarBebida() {
-        // Verifica se o usuário tem pelo menos 18 anos
         return calcularIdade() >= 18;
     }
 

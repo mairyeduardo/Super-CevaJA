@@ -36,6 +36,11 @@ public class CervejaService {
         return cervejaRepository.findByTipo(tipo);
     }
 
+    public Cerveja buscarPorId(Long id) {
+        var cerveja = cervejaRepository.findById(id);
+        return cerveja.orElse(null);
+    }
+
     public void adicionarCerveja(CervejaRequestDTO cervejaRequestDTO) {
         String verificarTipoDaCervejaASerAdicionada = cervejaRequestDTO.getTipo();
         Cerveja TipoCervejaExistenteSalva = buscarCervejaPorTipo(verificarTipoDaCervejaASerAdicionada);

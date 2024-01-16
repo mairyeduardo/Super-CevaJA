@@ -10,5 +10,5 @@ import java.util.List;
 public class PedidoRequestDTO {
 
     private Long idUsuario;
-    private List<Cerveja> cerveja;
+    private List<PedidoCervejaInputDTO> cerveja;
 }

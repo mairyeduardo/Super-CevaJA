@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
+
 @Entity
 @Table(name = "Cerveja_Tb")
 @Data
@@ -18,7 +20,5 @@ public class Cerveja {
     private BigDecimal valor;
     @Column
     private BigDecimal quantidade;
-    @ManyToOne
-    @JoinColumn(name = "pedido_id")
-    private Pedido pedido;
+
 }
